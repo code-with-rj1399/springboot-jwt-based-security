@@ -4,7 +4,10 @@ import com.spring_concepts.jwt_based_security.filter.JwtFilter;
 import com.spring_concepts.jwt_based_security.service.CustomUserDetailsService;
 import com.spring_concepts.jwt_based_security.utils.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,6 +22,11 @@ public class SecurityConfig {
     public SecurityConfig(JWTUtil jwtUtil, CustomUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
