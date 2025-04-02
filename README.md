@@ -1,6 +1,5 @@
 # springboot-jwt-based-security
 
-
 # JWT Authentication in Spring Boot
 
 This project implements **JWT-based authentication** using **Spring Boot and Spring Security**. The server runs on **port 8084** and provides endpoints for user authentication and securing APIs with JWT.
@@ -62,31 +61,27 @@ The server will start on [**http://localhost:8084**](http://localhost:8084) 🚀
 
 ### 1️⃣ Register a User
 
-```http
-POST /auth/register
-```
+**[POST /auth/register](http://localhost:8084/swagger-ui.html#/AuthController/register)**
 
 **Request Body:**
 
 ```json
 {
-    "username": "john_doe",
-    "password": "password123"
+  "username": "john_doe",
+  "password": "password123"
 }
 ```
 
 ### 2️⃣ Login & Get JWT Token
 
-```http
-POST /auth/login
-```
+**[POST /auth/login](http://localhost:8084/swagger-ui.html#/AuthController/login)**
 
 **Request Body:**
 
 ```json
 {
-    "username": "john_doe",
-    "password": "password123"
+  "username": "john_doe",
+  "password": "password123"
 }
 ```
 
@@ -94,15 +89,13 @@ POST /auth/login
 
 ```json
 {
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 ```
 
 ### 3️⃣ Access Secured Endpoint
 
-```http
-GET /api/protected
-```
+**[GET /users/all](http://localhost:8084/swagger-ui.html#/UserController/getAllUsers)**
 
 **Headers:**
 
@@ -132,39 +125,21 @@ Authorization: Bearer <JWT_TOKEN>
 
 ## 🛠 API Endpoints
 
-| Method | Endpoint         | Description                 |
-| ------ | ---------------- | --------------------------- |
-| POST   | `/auth/register` | Register new user           |
-| POST   | `/auth/login`    | Authenticate user & get JWT |
-| GET    | `/api/protected` | Secured API (Requires JWT)  |
+| Endpoint          | Method | Description |
+|------------------|--------|-------------|
+| **[POST /auth/register](http://localhost:8084/swagger-ui.html#/AuthController/register)** | POST   | Register a new user |
+| **[POST /auth/login](http://localhost:8084/swagger-ui.html#/AuthController/login)**    | POST   | Authenticate and receive a JWT token |
+| **[GET /users/all](http://localhost:8084/swagger-ui/index.html#/users-controller/getAllUsers)** | GET    | Get list of users (secured) |
+
+## Swagger API Documentation
+After running the application, you can access the Swagger UI at:
+
+- **[Swagger UI](http://localhost:8084/swagger-ui.html)**
+- **[OpenAPI Docs](http://localhost:8084/v3/api-docs)**
 
 ---
 
-## 🏁 Running with Docker
 
-You can also run the project using **Docker**:
-
-1. Build the Docker image:
-
-```sh
-docker build -t jwt-auth-app .
-```
-
-2. Run the container:
-
-```sh
-docker run -p 8084:8084 jwt-auth-app
-```
-
----
-
-## 🤝 Contributing
-
-Feel free to submit **pull requests** or open **issues** for improvements. 😊
-
----
-
-## 📝 License
-
-This project is licensed under the **MIT License**.
+## Author
+- GitHub: **[code-with-rj1399](https://github.com/code-with-rj1399)**
 
