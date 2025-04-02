@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -29,14 +30,15 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable() //// Disable CSRF (not needed for JWT authentication)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
-                                .requestMatchers("/auth/login").permitAll() //// Allow login API without authentication
+                                .requestMatchers("/auth/login", "/swagger-ui/**", "/api-docs/**").permitAll() //// Allow login API without authentication
                                 .anyRequest().authenticated() // // All other requests require authentication
                 ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//// Disable session
-                .addFilter(new JwtFilter());// Add JWT filter
+                .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);// Add JWT filter
         return httpSecurity.build();
     }
 }

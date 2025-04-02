@@ -4,6 +4,7 @@ import com.spring_concepts.jwt_based_security.models.AuthenticationRequest;
 import com.spring_concepts.jwt_based_security.models.AuthenticationResponse;
 import com.spring_concepts.jwt_based_security.repositories.UserRepository;
 import com.spring_concepts.jwt_based_security.utils.JWTUtil;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +28,7 @@ public class AuthController {
         this.userRepository = userRepository;
     }
 
+    @Operation(summary = "User login to generate JWT")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest){
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
