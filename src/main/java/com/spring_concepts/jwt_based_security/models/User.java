@@ -1,10 +1,10 @@
 package com.spring_concepts.jwt_based_security.models;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import lombok.Builder;
 
 @Entity
-@Builder
 @Table(name="users")
 public class User {
 
@@ -13,6 +13,7 @@ public class User {
     }
 
     @Id
+    @Hidden
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

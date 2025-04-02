@@ -10,6 +10,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -26,6 +28,11 @@ public class SecurityConfig {
     }
 
     @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();  // Define BCryptPasswordEncoder as a bean
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
@@ -35,7 +42,10 @@ public class SecurityConfig {
         httpSecurity.csrf().disable() //// Disable CSRF (not needed for JWT authentication)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
-                                .requestMatchers("/auth/login", "/swagger-ui/**", "/api-docs/**").permitAll() //// Allow login API without authentication
+                                .requestMatchers("/auth/login",
+                                        "/auth/register",
+                                        "/swagger-ui/**",
+                                        "/api-docs/**").permitAll() //// Allow login API without authentication
                                 .anyRequest().authenticated() // // All other requests require authentication
                 ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//// Disable session
                 .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);// Add JWT filter

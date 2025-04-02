@@ -3,26 +3,31 @@ package com.spring_concepts.jwt_based_security.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 import java.util.function.Function;
 
 @Component
 public class JWTUtil {
 
-    private static final long EXPIRATION_TIME_IN_MILLI_SECONDS = 1000 * 60 * 60;
-    private final String SECRET_KEY = "my_secret_key";
+    private static final long jwtExpiration = 1000 * 60 * 60;
+
+    private String secretKey = "SecretKeySecretKeySecretKeySecretKeySecretKeySecretKeySecretKeySecretKeySecretKey";
 
     public String generateToken(String username) {
-        return Jwts.builder()
+        return Jwts
+                .builder()
                 .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME_IN_MILLI_SECONDS))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -37,10 +42,9 @@ public class JWTUtil {
     public <T> T extractClaim(String token, Function<Claims, T> claimResolved){
         Key key = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS256);
         Claims claimsJws = Jwts.parser()
-                .verifyWith((SecretKey) key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .setSigningKey(getSignInKey())
+                .parseClaimsJws(token)
+                .getBody();
         return claimResolved.apply(claimsJws);
     }
 
@@ -51,6 +55,11 @@ public class JWTUtil {
 
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
+    }
+
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
 
